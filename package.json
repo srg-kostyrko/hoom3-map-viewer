@@ -10,6 +10,7 @@
     "homm3-parsers": "^0.8.1",
     "mobx": "^5.10.1",
     "mobx-react-lite": "^1.4.0",
+    "pixi-filters": "^3.0.3",
     "pixi-viewport": "^4.0.0-beta.2",
     "pixi.js": "^5.0.4",
     "react": "^16.8.6",
