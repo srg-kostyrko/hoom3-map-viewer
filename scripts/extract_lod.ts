@@ -7,7 +7,7 @@ import { textures } from "./textures";
 import { uiFiles } from "./ui";
 import { animationFiles } from "./animations";
 import { townFiles } from "./towns";
-import { lodFile, LodFile } from "homm3-parsers";
+import { LodFile, lodFile } from "homm3-parsers";
 import { parse, TagProducer } from "binary-markup";
 
 const allFiles = textures
@@ -25,7 +25,7 @@ interface LodFileEntry {
   content: number[];
 }
 
-const saveFile = (file: LodFileEntry) => {
+const saveFile = async (file: LodFileEntry) => {
   const pathToSave = path.resolve(__dirname, "defs", file.name.toLowerCase());
   try {
     const stream = fs.createWriteStream(pathToSave);
@@ -41,34 +41,38 @@ const saveFile = (file: LodFileEntry) => {
   }
 };
 
-function parseFile(filePath: string) {
-  fs.readFile(
-    filePath,
-    (err, data): void => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      const fileData = parse<LodFile>(
-        (lodFile as unknown) as TagProducer<LodFile>,
-        data
-      );
-
-      for (const file of fileData.entries) {
-        if (allFiles.includes(file.name.toLowerCase())) {
-          console.log(`Saving file ${file.name.toLowerCase()}`);
-          saveFile(file);
+function parseFile(filePath: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    fs.readFile(
+      filePath,
+      async (err, data): Promise<void> => {
+        if (err) {
+          reject(err);
+          return;
         }
+        const fileData = parse<LodFile>(
+          (lodFile as unknown) as TagProducer<LodFile>,
+          data
+        );
+
+        for (const file of fileData.entries) {
+          if (allFiles.includes(file.name.toLowerCase())) {
+            console.log(`Saving file ${file.name.toLowerCase()}`);
+            await saveFile(file);
+          }
+        }
+        resolve();
       }
-    }
-  );
+    );
+  });
 }
 
-glob(`${dirPath}/*.lod`, (error, files) => {
+glob(`${dirPath}/*.lod`, async (error, files) => {
   if (error) {
     console.error(error);
   }
   for (const filePath of files) {
-    parseFile(filePath);
+    console.log(filePath);
+    await parseFile(filePath);
   }
 });

@@ -6,7 +6,7 @@ import pack from "bin-pack";
 
 import * as fileLists from "./textures";
 import { convertPixels } from "./utils";
-import { parse } from "binary-markup";
+import { parse, TagProducer } from "binary-markup";
 import { defFile, DefFile } from "homm3-parsers";
 
 interface FileData {
@@ -19,6 +19,19 @@ interface FileData {
   left: number;
   top: number;
   imageData: Uint8ClampedArray;
+}
+
+interface Frame {
+  frame: { x: number; y: number; w: number; h: number };
+  rotated: boolean;
+  trimmed: boolean;
+  spriteSourceSize: {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  };
+  sourceSize: { w: number; h: number };
 }
 
 const root = path.resolve(process.cwd(), "src/assets/homm3");
@@ -56,7 +69,7 @@ const prepareAtlas = (groups: FileData[][]) => {
   const files = groups.reduce((acc, group) => acc.concat(group), []);
   const { width, height, items } = pack(files);
 
-  const frames = {};
+  const frames: { [key: string]: Frame } = {};
 
   for (const file of items) {
     frames[file.item.name] = {
@@ -98,14 +111,22 @@ const generateTexture = async (
       jetpack.readAsync(path.resolve(__dirname, "defs", desc.file), "buffer")
     );
   }
-  const groups = (await Promise.all(groupPromises)).map((group, index) =>
-    prepareGroup(
-      parse(defFile, group),
-      list[index].file,
-      list[index].name,
-      list[index].limit
-    )
-  );
+  const groups = (await Promise.all(groupPromises))
+    .map((group, index) => {
+      if (group) {
+        console.log(`Parsing ${list[index].file}`);
+        return prepareGroup(
+          parse<DefFile>((defFile as unknown) as TagProducer<DefFile>, group),
+          list[index].file,
+          list[index].name,
+          list[index].limit
+        );
+      } else {
+        console.error(`Failed to read group ${group}`);
+      }
+      return undefined;
+    })
+    .filter<FileData[]>((x): x is FileData[] => !!x);
 
   const { items, frames, width, height } = prepareAtlas(groups);
 
@@ -140,17 +161,19 @@ const generateTexture = async (
   );
 };
 
-generateTexture(
-  "terrain",
-  fileLists.roads.concat(fileLists.rivers).concat(fileLists.grounds)
-);
-generateTexture("towns", fileLists.towns);
-generateTexture("monsters", fileLists.monsters);
-generateTexture("impassable_terrain", fileLists.impassableTerrain);
-generateTexture("passable_terrain", fileLists.passableTerrain);
-generateTexture("visitable", fileLists.visitable);
-generateTexture("dwelling", fileLists.dwelling);
-generateTexture("artifact", fileLists.artifact);
-generateTexture("hero", fileLists.hero);
-generateTexture("resource", fileLists.resource);
-generateTexture("edges", [fileLists.edges]);
+(async () => {
+  await generateTexture(
+    "terrain",
+    fileLists.roads.concat(fileLists.rivers).concat(fileLists.grounds)
+  );
+  await generateTexture("towns", fileLists.towns);
+  await generateTexture("monsters", fileLists.monsters);
+  await generateTexture("impassable_terrain", fileLists.impassableTerrain);
+  await generateTexture("passable_terrain", fileLists.passableTerrain);
+  await generateTexture("visitable", fileLists.visitable);
+  await generateTexture("dwelling", fileLists.dwelling);
+  await generateTexture("artifact", fileLists.artifact);
+  await generateTexture("hero", fileLists.hero);
+  await generateTexture("resource", fileLists.resource);
+  await generateTexture("edges", [fileLists.edges]);
+})();

@@ -1,6 +1,22 @@
 import { convertPixels, convertBGGtoRGBA } from "./utils";
+import { DefFile, PcxFile } from "homm3-parsers";
 
-const createCssSprite = (input, name) => {
+type Part = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  imageData: Uint8ClampedArray;
+};
+
+export type UiPreparedData = {
+  parts: Part[];
+  width: number;
+  height: number;
+  css?: string[];
+};
+
+const createCssSprite = (input: DefFile, name: string): UiPreparedData => {
   const key = name.replace(".png", "");
   const css = [
     `.${key} {
@@ -14,7 +30,7 @@ const createCssSprite = (input, name) => {
   let index = 0;
 
   for (const block of input.blocks) {
-    for (const fileData of block.files.values()) {
+    for (const fileData of block.files) {
       const { width: w, height: h } = fileData;
       parts.push({
         x: 0,
@@ -34,12 +50,12 @@ const createCssSprite = (input, name) => {
   return { parts, width, height, css };
 };
 
-const extractFirstImage = input => {
+const extractFirstImage = (input: DefFile): UiPreparedData => {
   const { palette } = input;
   const parts = [];
 
   const [block] = input.blocks;
-  const [fileData] = [...block.files.values()];
+  const [fileData] = [...block.files];
   const { width, height } = fileData;
   parts.push({
     x: 0,
@@ -52,7 +68,7 @@ const extractFirstImage = input => {
   return { parts, width, height };
 };
 
-const createDialogBoxBorderImage = input => {
+const createDialogBoxBorderImage = (input: DefFile): UiPreparedData => {
   const { palette } = input;
   const parts = [];
   const width = 192;
@@ -71,7 +87,7 @@ const createDialogBoxBorderImage = input => {
   let index = 0;
 
   for (const block of input.blocks) {
-    for (const fileData of block.files.values()) {
+    for (const fileData of block.files) {
       if (settings[index]) {
         const [x, y] = settings[index];
         const { top, left, width: w, height: h } = fileData;
@@ -90,11 +106,11 @@ const createDialogBoxBorderImage = input => {
   return { parts, width, height };
 };
 
-const createPcxImage = input => {
+const createPcxImage = (input: PcxFile): UiPreparedData => {
   const { width, height } = input;
   const parts = [];
-  if (input.with_palette) {
-    const { pixels, palette } = input.with_palette;
+  if (input.hasPalette) {
+    const { pixels, palette } = input.paletteData;
     parts.push({
       x: 0,
       y: 0,
@@ -102,20 +118,20 @@ const createPcxImage = input => {
       height,
       imageData: convertPixels(pixels, palette)
     });
-  } else if (input.rgb) {
+  } else if (input.hasBgr) {
     parts.push({
       x: 0,
       y: 0,
       width,
       height,
-      imageData: convertBGGtoRGBA(input.rgb)
+      imageData: convertBGGtoRGBA(input.bgr)
     });
   }
 
   return { parts, width, height };
 };
 
-const mergePcxToSprite = inputs => {
+const mergePcxToSprite = (inputs: PcxFile[]) => {
   const parts = [];
   let width = 0;
   let height = 0;
@@ -136,7 +152,7 @@ const mergePcxToSprite = inputs => {
   return { parts, width, height };
 };
 
-export const uiNameMap = {
+export const uiNameMap: { [key: string]: string } = {
   "twcrport.def": "army_icons.png",
   "cprsmall.def": "army_icons_small.png",
   "artifact.def": "artifact_icons.png",
@@ -194,7 +210,9 @@ export const uiNameMap = {
   "ransizx.def": "size_xl.png"
 };
 
-export const uiProcessing = {
+export const uiProcessing: {
+  [key: string]: (input: DefFile, name: string) => UiPreparedData;
+} = {
   "twcrport.def": createCssSprite,
   "artifact.def": createCssSprite,
   "cprsmall.def": createCssSprite,
@@ -217,6 +235,23 @@ export const uiProcessing = {
   "resource.def": createCssSprite,
   "dialgbox.def": createDialogBoxBorderImage,
 
+  "cssarm.def": extractFirstImage,
+  "cssroe.def": extractFirstImage,
+  "csssod.def": extractFirstImage,
+  "iam000.def": extractFirstImage,
+  "ranundr.def": extractFirstImage,
+  "icancel.def": extractFirstImage,
+  "iokay.def": extractFirstImage,
+  "mmenulg.def": extractFirstImage,
+  "ransizl.def": extractFirstImage,
+  "ransizm.def": extractFirstImage,
+  "ransizs.def": extractFirstImage,
+  "ransizx.def": extractFirstImage
+};
+
+export const uiProcessingPcx: {
+  [key: string]: (input: PcxFile, name: string) => UiPreparedData;
+} = {
   "tpcascas.pcx": createPcxImage,
   "tpcasdun.pcx": createPcxImage,
   "tpcasele.pcx": createPcxImage,
@@ -236,23 +271,14 @@ export const uiProcessing = {
   "dibox128.pcx": createPcxImage,
   "diboxbck.pcx": createPcxImage,
   "crstkpu.pcx": createPcxImage,
-  "puzzlogo.pcx": createPcxImage,
-
-  "cssarm.def": extractFirstImage,
-  "cssroe.def": extractFirstImage,
-  "csssod.def": extractFirstImage,
-  "iam000.def": extractFirstImage,
-  "ranundr.def": extractFirstImage,
-  "icancel.def": extractFirstImage,
-  "iokay.def": extractFirstImage,
-  "mmenulg.def": extractFirstImage,
-  "ransizl.def": extractFirstImage,
-  "ransizm.def": extractFirstImage,
-  "ransizs.def": extractFirstImage,
-  "ransizx.def": extractFirstImage
+  "puzzlogo.pcx": createPcxImage
 };
 
-export const uiGroups = [
+export const uiGroups: {
+  files: string[];
+  processingFn: (input: PcxFile[]) => UiPreparedData;
+  name: string;
+}[] = [
   {
     files: [
       "hpl000el.pcx",
@@ -595,5 +621,6 @@ export const uiGroups = [
 
 export const uiFiles = [
   ...Object.keys(uiProcessing),
-  ...uiGroups.reduce((acc, group) => acc.concat(group.files), [])
+  ...Object.keys(uiProcessingPcx),
+  ...uiGroups.reduce<string[]>((acc, group) => acc.concat(group.files), [])
 ];

@@ -15,8 +15,8 @@ import strongholdConfig from "./towns/stronghold";
 import towerConfig from "./towns/tower";
 
 import { convertPixels, convertBGGtoRGBA } from "./utils";
-import { pcxFile, PcxFile, defFile } from "homm3-parsers";
-import { parse } from "binary-markup";
+import { pcxFile, PcxFile, defFile, DefFile } from "homm3-parsers";
+import { parse, TagProducer } from "binary-markup";
 import { TownConfig } from "./towns";
 
 const root = path.resolve(process.cwd(), "src/assets/homm3");
@@ -24,10 +24,10 @@ const root = path.resolve(process.cwd(), "src/assets/homm3");
 const createPcxImage = (input: PcxFile) => {
   const { width, height } = input;
   let imageData;
-  if (input.with_palette) {
-    const { pixels, palette } = input.with_palette;
+  if (input.hasPalette) {
+    const { pixels, palette } = input.paletteData;
     imageData = convertPixels(pixels, palette);
-  } else if (input.bgr) {
+  } else if (input.hasBgr) {
     imageData = convertBGGtoRGBA(input.bgr);
   }
 
@@ -47,19 +47,27 @@ function extractBackground(name: string, config: TownConfig) {
     path.resolve(__dirname, "defs", config.town.townBackground.toLowerCase()),
     "buffer"
   );
-  const { width, height, imageData } = createPcxImage(parse(pcxFile, bgFile));
+  if (bgFile) {
+    const { width, height, imageData } = createPcxImage(
+      parse<PcxFile>((pcxFile as unknown) as TagProducer<PcxFile>, bgFile)
+    );
 
-  cssRules.push(`.town--${name} .town--buildings {
+    if (imageData) {
+      cssRules.push(`.town--${name} .town--buildings {
   background-image: url(./${name}-bg.png);
 }`);
 
-  const canvas = createCanvas(width, height);
-  const ctx = canvas.getContext("2d");
-  ctx.putImageData(createImageData(imageData, width, height), 0, 0);
+      const canvas = createCanvas(width, height);
+      const ctx = canvas.getContext("2d");
+      ctx.putImageData(createImageData(imageData, width, height), 0, 0);
 
-  const out = fs.createWriteStream(path.join(root, "towns", `${name}-bg.png`));
-  const stream = canvas.createPNGStream();
-  stream.pipe(out);
+      const out = fs.createWriteStream(
+        path.join(root, "towns", `${name}-bg.png`)
+      );
+      const stream = canvas.createPNGStream();
+      stream.pipe(out);
+    }
+  }
 }
 
 function extractTown(name: string, config: TownConfig) {
@@ -75,32 +83,37 @@ function extractTown(name: string, config: TownConfig) {
         path.resolve(__dirname, "defs", fileName),
         "buffer"
       );
-      const parsed = parse(defFile, content);
-      const { blocks, palette } = parsed;
-      const [block] = blocks;
-      const [fileData] = block.files;
+      if (content) {
+        const parsed = parse<DefFile>(
+          (defFile as unknown) as TagProducer<DefFile>,
+          content
+        );
+        const { blocks, palette } = parsed;
+        const [block] = blocks;
+        const [fileData] = block.files;
 
-      const imageData = createImageData(
-        convertPixels(fileData.pixels, palette),
-        fileData.width,
-        fileData.height
-      );
-      const canvas = createCanvas(fileData.fullWidth, fileData.fullHeight);
-      const ctx = canvas.getContext("2d");
-      ctx.putImageData(imageData, fileData.left, fileData.top);
+        const imageData = createImageData(
+          convertPixels(fileData.pixels, palette),
+          fileData.width,
+          fileData.height
+        );
+        const canvas = createCanvas(fileData.fullWidth, fileData.fullHeight);
+        const ctx = canvas.getContext("2d");
+        ctx.putImageData(imageData, fileData.left, fileData.top);
 
-      files.push({
-        key,
-        structConfig,
-        width: fileData.fullWidth,
-        height: fileData.fullHeight,
-        imageData: ctx.getImageData(
-          0,
-          0,
-          fileData.fullWidth,
-          fileData.fullHeight
-        )
-      });
+        files.push({
+          key,
+          structConfig,
+          width: fileData.fullWidth,
+          height: fileData.fullHeight,
+          imageData: ctx.getImageData(
+            0,
+            0,
+            fileData.fullWidth,
+            fileData.fullHeight
+          )
+        });
+      }
     }
   }
 
@@ -121,7 +134,7 @@ function extractTown(name: string, config: TownConfig) {
   height: ${item.height}px;
   left: ${item.structConfig.x}px;
   top: ${item.structConfig.y}px;
-  z-index: ${"z" in item.structConfig ? item.structConfig.z + 3 : 3};
+  z-index: ${item.structConfig.z !== undefined ? item.structConfig.z + 3 : 3};
   background-position: -${x}px -${y}px
 }`);
   }

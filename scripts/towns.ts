@@ -13,6 +13,9 @@ export interface TownConfig {
     townBackground: string;
     structures: {
       [key: string]: {
+        x: number;
+        y: number;
+        z?: number;
         animation: string;
       };
     };

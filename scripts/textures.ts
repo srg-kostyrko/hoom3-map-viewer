@@ -1,6 +1,12 @@
 import fileLists from "./texturesList";
 import { Terrain, River, Road } from "homm3-parsers";
 
+export type FileData = {
+  file: string;
+  name: (index: number, fileName: string) => string;
+  limit?: number;
+};
+
 export const edges = {
   name: (index: number) => `edge_${index}.png`,
   file: "edg.def"
@@ -80,10 +86,10 @@ export const roads = [
     file: "cobbrd.def"
   }
 ];
-const name = (_: number, n: string) => n;
+const name = (_: number, fileName: string) => fileName;
 
-const extractFile = e => e.file;
-const fileData = file => ({ file, name, limit: 1 });
+const extractFile = (e: FileData): string => e.file;
+const fileData = (file: string): FileData => ({ file, name, limit: 1 });
 
 export const textures = [
   ...rivers.map(extractFile),

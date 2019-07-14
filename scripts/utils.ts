@@ -1,4 +1,4 @@
-const replacementMap = {
+const replacementMap: Record<number, RGBAArray> = {
   0: [0, 0, 0, 0],
   1: [0, 0, 0, 0x40],
   4: [0, 0, 0, 0x80],
