@@ -1,5 +1,5 @@
 import React from "react";
-import { Tile, River as RiverType } from "homm3-parsers";
+import { Tile, River as RiverType, TileMirror } from "homm3-parsers";
 import { Container } from "pixi.js";
 import { prepareSpriteProps } from "./utils";
 import { Sprite } from "../../../pixi/Sprite";
@@ -13,8 +13,8 @@ export function River({ tile, parent }: { tile: Tile; parent: Container }) {
       image={image}
       parent={parent}
       {...prepareSpriteProps(
-        tile.mirror.groundVertical,
-        tile.mirror.groundHorizontal
+        tile.mirror.includes(TileMirror.RiverVertical),
+        tile.mirror.includes(TileMirror.RiverHorizontal)
       )}
     />
   );

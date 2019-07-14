@@ -7,8 +7,8 @@ import { textures } from "./textures";
 import { uiFiles } from "./ui";
 import { animationFiles } from "./animations";
 import { townFiles } from "./towns";
-import { lodFile } from "homm3-parsers";
-import { parse } from "binary-markup";
+import { lodFile, LodFile } from "homm3-parsers";
+import { parse, TagProducer } from "binary-markup";
 
 const allFiles = textures
   .concat(uiFiles)
@@ -49,7 +49,10 @@ function parseFile(filePath: string) {
         console.error(err);
         return;
       }
-      const fileData = parse(lodFile, data);
+      const fileData = parse<LodFile>(
+        (lodFile as unknown) as TagProducer<LodFile>,
+        data
+      );
 
       for (const file of fileData.entries) {
         if (allFiles.includes(file.name.toLowerCase())) {
