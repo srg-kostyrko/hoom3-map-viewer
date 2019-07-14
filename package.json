@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/jest": "24.0.15",
-    "@types/node": "12.0.10",
-    "@types/react": "16.8.22",
-    "@types/react-dom": "16.8.4",
     "homm3-parsers": "^0.8.1",
     "mobx": "^5.10.1",
     "mobx-react-lite": "^1.4.0",
@@ -18,11 +14,31 @@
     "react-scripts": "3.0.1",
     "typescript": "3.5.2"
   },
+  "devDependencies": {
+    "@types/bin-pack": "^1.0.0",
+    "@types/pako": "^1.0.1",
+    "@types/glob": "^7.1.1",
+    "@types/jest": "24.0.15",
+    "@types/node": "12.0.10",
+    "@types/react": "16.8.22",
+    "@types/react-dom": "16.8.4",
+    "glob": "^7.1.4",
+    "bin-pack": "^1.0.2",
+    "canvas": "^2.5.0",
+    "fs-jetpack": "^2.2.2"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "extract": "yarn run extract:lod && yarn run extract:textures && yarn run extract:animations && yarn run extract:ui && extract:towns",
+    "extract:lod": "ts-node scripts/extract_lod.ts",
+    "extract:textures": "ts-node scripts/extract_textures.ts",
+    "extract:ui": "ts-node scripts/extract_ui.ts",
+    "extract:animations": "ts-node scripts/extract_animations.ts",
+    "extract:towns": "ts-node scripts/extract_towns.ts",
+    "conver:maps": "ts-node scripts/convert_maps.ts"
   },
   "eslintConfig": {
     "extends": "react-app"
