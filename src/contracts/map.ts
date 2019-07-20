@@ -3,3 +3,10 @@ export enum NavMeshType {
   NotPassable,
   Active
 }
+
+export type ViewportPosition = {
+  height: number;
+  width: number;
+  x: number;
+  y: number;
+};

@@ -3,7 +3,7 @@ import { observable, action } from "mobx";
 import { useLocalStore } from "mobx-react-lite";
 import { IAppStore, MapData } from "../contracts/app";
 import { H3MFile, MapObject, MapObjectAB, MapObjectRoE } from "homm3-parsers";
-import { NavMeshType } from "../contracts/map";
+import { NavMeshType, ViewportPosition } from "../contracts/map";
 import { getLevelObjects } from "../helpers/map";
 
 // import demoMap from "../assets/homm3/maps/sod_grounds.json";
@@ -15,6 +15,12 @@ import { BORDER_WIDTH, TILE_SIZE } from "../components/map/MapConst";
 
 class AppStore implements IAppStore {
   @observable.ref mapData: MapData | null = null;
+  @observable.ref viewportPosition: ViewportPosition = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0
+  };
   @observable areResourcesLoaded: boolean = false;
 
   pixiApp: Application | null = null;
@@ -145,13 +151,26 @@ class AppStore implements IAppStore {
   onResize(width: number, height: number) {}
 
   @action.bound
-  onViewportMoved(bounds: Rectangle) {}
+  onViewportMoved(position: ViewportPosition) {
+    this.viewportPosition = position;
+  }
+
+  changeViewportCenter(x: number, y: number) {
+    if (this.viewport) {
+      this.viewport.moveCorner(x, y);
+    }
+  }
 
   @action.bound
   markResourcesLoaded() {
-    console.log("loaded");
     this.areResourcesLoaded = true;
-    this.mapData = this.prepareMapData(demoMap as H3MFile);
+    this.changeMap(demoMap as H3MFile);
+  }
+
+  @action.bound
+  changeMap(content: H3MFile) {
+    this.dispsosePrevMap();
+    this.mapData = this.prepareMapData(content);
     const { mapContainer, ground, sub } = createMap(
       this.mapData,
       this.onObjectClick
@@ -170,6 +189,14 @@ class AppStore implements IAppStore {
       );
       this.viewport.addChild(mapContainer);
     }
+  }
+
+  dispsosePrevMap() {
+    this.mapContainer && this.mapContainer.destroy();
+    this.mapContainer = null;
+    this.ground = null;
+    this.sub = null;
+    this.viewport && this.viewport.removeChildren();
   }
 }
 

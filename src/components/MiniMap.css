@@ -1,0 +1,7 @@
+.mini-map {
+  position: relative;
+}
+.mini-map-ruler {
+  position: absolute;
+  border: 1px solid red;
+}
