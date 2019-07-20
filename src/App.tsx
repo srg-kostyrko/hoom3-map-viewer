@@ -1,27 +1,28 @@
 import React from "react";
 import { Stage } from "./pixi/Stage";
-import { Viewport } from "./pixi/Viewport";
-import { Container } from "./pixi/Container";
 import { Loader } from "./pixi/Loader";
 import { resources } from "./assets/homm3/resources";
+import { AppStoreProvider, AppStoreConsumer } from "./store/AppStore";
 
 export const App = () => {
   return (
-    <div className="App">
-      <Stage>
-        <>
-          <Loader resources={resources} />
-          <Viewport worldWidth={1000} worldHeight={1000}>
-            {viewport => {
-              return (
+    <AppStoreProvider>
+      <div className="App">
+        <AppStoreConsumer>
+          {store =>
+            store && (
+              <Stage onCreated={store.onPixiAppCreated}>
                 <>
-                  <Container parent={viewport}>{() => <></>}</Container>
+                  <Loader
+                    resources={resources}
+                    onLoaded={store.markResourcesLoaded}
+                  />
                 </>
-              );
-            }}
-          </Viewport>
-        </>
-      </Stage>
-    </div>
+              </Stage>
+            )
+          }
+        </AppStoreConsumer>
+      </div>
+    </AppStoreProvider>
   );
 };

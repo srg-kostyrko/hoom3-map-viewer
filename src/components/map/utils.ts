@@ -3,7 +3,9 @@ import {
   Alignment,
   MapObject,
   MetaType,
-  Building
+  Building,
+  MapObjectAB,
+  MapObjectRoE
 } from "homm3-parsers";
 import { ColorReplaceFilter } from "pixi-filters";
 
@@ -93,7 +95,9 @@ export function getAlignmentByObject(header: string): Alignment {
   return alignmentHash[header.toLowerCase()] || Alignment.Random;
 }
 
-export function getTownObjectType(object: MapObject): TownSprite {
+export function getTownObjectType(
+  object: MapObject | MapObjectAB | MapObjectRoE
+): TownSprite {
   if (object.body.type !== MetaType.Town) return "village";
   const { body } = object;
   const { data } = body;
@@ -110,8 +114,8 @@ export function getTownObjectType(object: MapObject): TownSprite {
   return "village";
 }
 
-export function getTownObject(object: MapObject) {
+export function getTownObject(object: MapObject | MapObjectAB | MapObjectRoE) {
   const type = getTownObjectType(object);
-  const townType = getAlignmentByObject(object.attribute.header);
+  const townType = getAlignmentByObject(object.attributes.header);
   return townSprites[townType][type];
 }

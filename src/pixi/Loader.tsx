@@ -1,4 +1,3 @@
-import { usePixiApp } from "./hooks/usePixiApp";
 import { useEffect } from "react";
 import { Spritesheet, Loader as PixiLoader, LoaderResource } from "pixi.js";
 
@@ -44,14 +43,16 @@ export function loadResources(
 }
 
 export function Loader({
-  resources
+  resources,
+  onLoaded
 }: {
   resources: { [name: string]: Resource };
+  onLoaded(): void;
 }) {
-  const app = usePixiApp();
-
   useEffect(() => {
-    loadResources(app.loader, resources).then(() => console.log("loaded"));
+    loadResources(PixiLoader.shared, resources).then(() => {
+      onLoaded();
+    });
   });
 
   return null;

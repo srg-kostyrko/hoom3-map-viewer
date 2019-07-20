@@ -1,4 +1,4 @@
-export enum PassabilityType {
+export enum NavMeshType {
   Passable,
   NotPassable,
   Active
