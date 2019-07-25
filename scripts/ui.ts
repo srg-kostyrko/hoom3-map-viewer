@@ -1,5 +1,5 @@
 import { convertPixels, convertBGGtoRGBA } from "./utils";
-import { DefFile, PcxFile } from "homm3-parsers";
+import { DefFile, PcxFile, creatureEnum } from "homm3-parsers";
 
 type Part = {
   x: number;
@@ -16,7 +16,9 @@ export type UiPreparedData = {
   css?: string[];
 };
 
-const createCssSprite = (input: DefFile, name: string): UiPreparedData => {
+const createCssSprite = (
+  indexConvert: (index: number) => string = index => `index-${index}`
+) => (input: DefFile, name: string): UiPreparedData => {
   const key = name.replace(".png", "");
   const css = [
     `.${key} {
@@ -39,7 +41,7 @@ const createCssSprite = (input: DefFile, name: string): UiPreparedData => {
         height: h,
         imageData: convertPixels(fileData.pixels, palette)
       });
-      css.push(`.${key}.index-${index} {
+      css.push(`.${key}.${indexConvert(index)} {
   background-position: 0px -${height}px;
 }`);
       height += fileData.height;
@@ -210,29 +212,39 @@ export const uiNameMap: { [key: string]: string } = {
   "ransizx.def": "size_xl.png"
 };
 
+const findNameByIndex = (hash: Record<string, number>, offset: number = 0) => (
+  index: number
+) => {
+  const entry = Object.entries(hash).find(
+    ([, value]) => value === index + offset
+  );
+  if (entry) return entry[0];
+  return `index-${index}`;
+};
+
 export const uiProcessing: {
   [key: string]: (input: DefFile, name: string) => UiPreparedData;
 } = {
-  "twcrport.def": createCssSprite,
-  "artifact.def": createCssSprite,
-  "cprsmall.def": createCssSprite,
-  "crest58.def": createCssSprite,
-  "hallcstl.def": createCssSprite,
-  "halldung.def": createCssSprite,
-  "hallelem.def": createCssSprite,
-  "hallfort.def": createCssSprite,
-  "hallinfr.def": createCssSprite,
-  "hallnecr.def": createCssSprite,
-  "hallramp.def": createCssSprite,
-  "hallstrn.def": createCssSprite,
-  "halltowr.def": createCssSprite,
-  "pskill.def": createCssSprite,
-  "secskill.def": createCssSprite,
-  "spells.def": createCssSprite,
-  "spellscr.def": createCssSprite,
-  "speltab.def": createCssSprite,
-  "schools.def": createCssSprite,
-  "resource.def": createCssSprite,
+  "twcrport.def": createCssSprite(findNameByIndex(creatureEnum, -2)),
+  "artifact.def": createCssSprite(),
+  "cprsmall.def": createCssSprite(),
+  "crest58.def": createCssSprite(),
+  "hallcstl.def": createCssSprite(),
+  "halldung.def": createCssSprite(),
+  "hallelem.def": createCssSprite(),
+  "hallfort.def": createCssSprite(),
+  "hallinfr.def": createCssSprite(),
+  "hallnecr.def": createCssSprite(),
+  "hallramp.def": createCssSprite(),
+  "hallstrn.def": createCssSprite(),
+  "halltowr.def": createCssSprite(),
+  "pskill.def": createCssSprite(),
+  "secskill.def": createCssSprite(),
+  "spells.def": createCssSprite(),
+  "spellscr.def": createCssSprite(),
+  "speltab.def": createCssSprite(),
+  "schools.def": createCssSprite(),
+  "resource.def": createCssSprite(),
   "dialgbox.def": createDialogBoxBorderImage,
 
   "cssarm.def": extractFirstImage,

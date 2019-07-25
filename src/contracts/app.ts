@@ -25,6 +25,7 @@ export type MapData = {
 
 export interface IAppStore {
   mapData: MapData | null;
+  selectedObject: MapObject | MapObjectAB | MapObjectRoE | null;
   viewportPosition: ViewportPosition;
   areResourcesLoaded: boolean;
   changeViewportCenter(x: number, y: number): void;

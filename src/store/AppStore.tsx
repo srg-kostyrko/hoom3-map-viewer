@@ -21,6 +21,11 @@ class AppStore implements IAppStore {
     width: 0,
     height: 0
   };
+  @observable.ref selectedObject:
+    | MapObject
+    | MapObjectAB
+    | MapObjectRoE
+    | null = null;
   @observable areResourcesLoaded: boolean = false;
 
   pixiApp: Application | null = null;
@@ -139,7 +144,10 @@ class AppStore implements IAppStore {
   }
 
   @action.bound
-  onObjectClick(object: MapObject | MapObjectAB | MapObjectRoE) {}
+  onObjectClick(object: MapObject | MapObjectAB | MapObjectRoE) {
+    console.log(object);
+    this.selectedObject = object;
+  }
 
   @action.bound
   onPixiAppCreated(pixiApp: Application) {
@@ -188,10 +196,19 @@ class AppStore implements IAppStore {
         worldSize
       );
       this.viewport.addChild(mapContainer);
+      this.viewport.moveCorner(0, 0);
+      const bounds = new Rectangle(
+        this.viewport.left,
+        this.viewport.top,
+        this.viewport.worldScreenWidth,
+        this.viewport.worldScreenHeight
+      );
+      this.onViewportMoved(bounds);
     }
   }
 
   dispsosePrevMap() {
+    this.selectedObject = null;
     this.mapContainer && this.mapContainer.destroy();
     this.mapContainer = null;
     this.ground = null;

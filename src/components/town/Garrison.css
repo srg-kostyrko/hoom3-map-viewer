@@ -1,0 +1,21 @@
+.garrison {
+  display: flex;
+  padding: 0 5px;
+  font-family: Courier, monospace;
+}
+.garrison .army_icons {
+  position: relative;
+  background-repeat: no-repeat;
+  width: 58px;
+  height: 64px;
+  margin: 5px 3px;
+  box-shadow: 1px 1px black;
+}
+
+.garrison .army_icons .qty {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  line-height: 1;
+  background-color: rgba(0, 0, 0, 0.2);
+}

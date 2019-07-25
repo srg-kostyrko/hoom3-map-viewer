@@ -91,7 +91,7 @@ for (const [town, data] of Object.entries(townSprites)) {
   }
 }
 
-export function getAlignmentByObject(header: string): Alignment {
+export function getAlignmentByHeader(header: string): Alignment {
   return alignmentHash[header.toLowerCase()] || Alignment.Random;
 }
 
@@ -116,6 +116,6 @@ export function getTownObjectType(
 
 export function getTownObject(object: MapObject | MapObjectAB | MapObjectRoE) {
   const type = getTownObjectType(object);
-  const townType = getAlignmentByObject(object.attributes.header);
+  const townType = getAlignmentByHeader(object.attributes.header);
   return townSprites[townType][type];
 }

@@ -1,3 +1,5 @@
+import { Building, Creature, Artifact } from "homm3-parsers";
+
 export default {
   creatureBackground: {
     "120px": "TPCASFOR",
@@ -6,7 +8,7 @@ export default {
   town: {
     structures: {
       extraAnimation: { animation: "TBFREXT2.def", x: 372, y: 227 },
-      mageGuild1: {
+      [Building.MageGuild1]: {
         animation: "TBFRMAGE.def",
         x: 0,
         y: 200,
@@ -14,7 +16,7 @@ export default {
         border: "TOFMAG1A.pcx",
         area: "TZFMAG1A.pcx"
       },
-      mageGuild2: {
+      [Building.MageGuild2]: {
         animation: "TBFRMAG2.def",
         x: 0,
         y: 177,
@@ -22,7 +24,7 @@ export default {
         border: "TOFMAG2A.pcx",
         area: "TZFMAG2A.pcx"
       },
-      mageGuild3: {
+      [Building.MageGuild3]: {
         animation: "TBFRMAG3.def",
         x: 0,
         y: 135,
@@ -30,7 +32,7 @@ export default {
         border: "TOFMAG3A.pcx",
         area: "TZFMAG3A.pcx"
       },
-      tavern: {
+      [Building.Tavern]: {
         animation: "TBFRTVRN.def",
         x: 634,
         y: 219,
@@ -38,14 +40,14 @@ export default {
         border: "TOFTAVA.pcx",
         area: "TZFTAVA.pcx"
       },
-      shipyard: {
+      [Building.Shipyard]: {
         animation: "TBFRDOCK.def",
         x: 197,
         y: 294,
         border: "TOFDCK2.pcx",
         area: "TZFDCK2.pcx"
       },
-      fort: {
+      [Building.Fort]: {
         animation: "TBFRCSTL.def",
         x: 368,
         y: 118,
@@ -53,7 +55,7 @@ export default {
         border: "TOFCAS1.pcx",
         area: "TZFCAS1.pcx"
       },
-      citadel: {
+      [Building.Citadel]: {
         animation: "TBFRCAS2.def",
         x: 368,
         y: 98,
@@ -61,7 +63,7 @@ export default {
         border: "TOFCAS2.pcx",
         area: "TZFCAS2.pcx"
       },
-      castle: {
+      [Building.Castle]: {
         animation: "TBFRCAS3.def",
         x: 368,
         y: 55,
@@ -69,7 +71,7 @@ export default {
         border: "TOFCAS3.pcx",
         area: "TZFCAS3.pcx"
       },
-      villageHall: {
+      [Building.VillageHall]: {
         animation: "TBFRHALL.def",
         x: 166,
         y: 128,
@@ -77,7 +79,7 @@ export default {
         border: "TOFHAL1.pcx",
         area: "TZFHAL1.pcx"
       },
-      townHall: {
+      [Building.TownHall]: {
         animation: "TBFRHAL2.def",
         x: 166,
         y: 97,
@@ -85,7 +87,7 @@ export default {
         border: "TOFHAL2.pcx",
         area: "TZFHAL2.pcx"
       },
-      cityHall: {
+      [Building.CityHall]: {
         animation: "TBFRHAL3.def",
         x: 166,
         y: 51,
@@ -93,7 +95,7 @@ export default {
         border: "TOFHAL3.pcx",
         area: "TZFHAL3.pcx"
       },
-      capitol: {
+      [Building.Capitol]: {
         animation: "TBFRHAL4.def",
         x: 166,
         y: 2,
@@ -101,7 +103,7 @@ export default {
         border: "TOFHAL4.pcx",
         area: "TZFHAL4.pcx"
       },
-      marketplace: {
+      [Building.Marketplace]: {
         animation: "TBFRMARK.def",
         x: 382,
         y: 219,
@@ -109,7 +111,7 @@ export default {
         border: "TOFMRKAA.pcx",
         area: "TZFMRKAA.pcx"
       },
-      resourceSilo: {
+      [Building.ResourceSilo]: {
         animation: "TBFRSILO.def",
         x: 448,
         y: 210,
@@ -117,21 +119,21 @@ export default {
         border: "TOFMRK2A.pcx",
         area: "TZFMRK2A.pcx"
       },
-      blacksmith: {
+      [Building.Blacksmith]: {
         animation: "TBFRBLAK.def",
         x: 360,
         y: 160,
         border: "TOFAIDA.pcx",
         area: "TZFAIDA.pcx"
       },
-      special1: {
+      [Building.Special1]: {
         animation: "TBFRSPEC.def",
         x: 703,
         y: 36,
         border: "TOFCAGE.pcx",
         area: "TZFCAGE.pcx"
       },
-      horde1: {
+      [Building.Horde1]: {
         animation: "TBFRHRD1.def",
         x: 641,
         y: 121,
@@ -159,14 +161,14 @@ export default {
         area: "TZFDCK1.pcx",
         hidden: true
       },
-      special2: {
+      [Building.Special2]: {
         animation: "TBFREXT0.def",
         x: 341,
         y: 174,
         border: "TOFCASD.pcx",
         area: "TZFCASD.pcx"
       },
-      special3: {
+      [Building.Special3]: {
         animation: "TBFREXT1.def",
         x: 349,
         y: 79,
@@ -174,7 +176,7 @@ export default {
         border: "TOFCASA.pcx",
         area: "TZFCASA.pcx"
       },
-      grail: {
+      [Building.Grail]: {
         animation: "TBFRHOLY.def",
         x: 468,
         y: 260,
@@ -183,7 +185,7 @@ export default {
         area: "TZFHLYAA.pcx"
       },
       extraCapitol: { animation: "TBFRWTRW.def", x: 320, y: 141 },
-      dwelling1: {
+      [Building.Dwelling1]: {
         animation: "TBFRDW_0.def",
         x: 641,
         y: 168,
@@ -191,28 +193,28 @@ export default {
         border: "TOFGNL1.pcx",
         area: "TZFGNL1.pcx"
       },
-      dwelling2: {
+      [Building.Dwelling2]: {
         animation: "TBFRDW_1.def",
         x: 141,
         y: 178,
         border: "TOFLIZ1.pcx",
         area: "TZFLIZ1.pcx"
       },
-      dwelling3: {
+      [Building.Dwelling3]: {
         animation: "TBFRDW_3.def",
         x: 192,
         y: 85,
         border: "TOFFLY1A.pcx",
         area: "TZFFLY1A.pcx"
       },
-      dwelling4: {
+      [Building.Dwelling4]: {
         animation: "TBFRDW_4.def",
         x: 0,
         y: 292,
         border: "TOFBAS1.pcx",
         area: "TZFBAS1.pcx"
       },
-      dwelling5: {
+      [Building.Dwelling5]: {
         animation: "TBFRDW_2.def",
         x: 15,
         y: 127,
@@ -220,14 +222,14 @@ export default {
         border: "TOFGOR1.pcx",
         area: "TZFGOR1.pcx"
       },
-      dwelling6: {
+      [Building.Dwelling6]: {
         animation: "TBFRDW_5.def",
         x: 0,
         y: 4,
         border: "TOFWYV1.pcx",
         area: "TZFWYV1.pcx"
       },
-      dwelling7: {
+      [Building.Dwelling7]: {
         animation: "TBFRDW_6.def",
         x: 612,
         y: 291,
@@ -235,7 +237,7 @@ export default {
         border: "TOFHYD1A.pcx",
         area: "TZFHYD1A.pcx"
       },
-      dwellingUp1: {
+      [Building.DwellingUp1]: {
         animation: "TBFRUP_0.def",
         x: 641,
         y: 107,
@@ -243,28 +245,28 @@ export default {
         border: "TOFGNL2.pcx",
         area: "TZFGNL2.pcx"
       },
-      dwellingUp2: {
+      [Building.DwellingUp2]: {
         animation: "TBFRUP_1.def",
         x: 125,
         y: 163,
         border: "TOFLIZ2.pcx",
         area: "TZFLIZ2.pcx"
       },
-      dwellingUp3: {
+      [Building.DwellingUp3]: {
         animation: "TBFRUP_3.def",
         x: 159,
         y: 19,
         border: "TOFFLY2A.pcx",
         area: "TZFFLY2A.pcx"
       },
-      dwellingUp4: {
+      [Building.DwellingUp4]: {
         animation: "TBFRUP_4.def",
         x: 0,
         y: 257,
         border: "TOFBAS2.pcx",
         area: "TZFBAS2.pcx"
       },
-      dwellingUp5: {
+      [Building.DwellingUp5]: {
         animation: "TBFRUP_2.def",
         x: 15,
         y: 69,
@@ -272,14 +274,14 @@ export default {
         border: "TOFGOR2.pcx",
         area: "TZFGOR2.pcx"
       },
-      dwellingUp6: {
+      [Building.DwellingUp6]: {
         animation: "TBFRUP_5.def",
         x: 0,
         y: 4,
         border: "TOFWYV2.pcx",
         area: "TZFWYV2.pcx"
       },
-      dwellingUp7: {
+      [Building.DwellingUp7]: {
         animation: "TBFRUP_6.def",
         x: 587,
         y: 263,
@@ -299,121 +301,124 @@ export default {
     hallBackground: "TPTHBKFR.BMP",
     hallSlots: [
       [
-        ["villageHall", "townHall", "cityHall", "capitol"],
-        ["fort", "citadel", "castle"],
-        ["tavern"],
-        ["blacksmith"]
+        [
+          Building.VillageHall,
+          Building.TownHall,
+          Building.CityHall,
+          Building.Capitol
+        ],
+        [Building.Fort, Building.Citadel, Building.Castle],
+        [Building.Tavern],
+        [Building.Blacksmith]
       ],
       [
-        ["marketplace", "resourceSilo"],
-        ["mageGuild1", "mageGuild2", "mageGuild3"],
-        ["shipyard"]
-      ],
-      [["special1"], ["special2", "special3"], ["horde1", "horde1Upgr"]],
-      [
-        ["dwelling1", "dwellingUp1"],
-        ["dwelling2", "dwellingUp2"],
-        ["dwelling3", "dwellingUp3"],
-        ["dwelling4", "dwellingUp4"]
+        [Building.Marketplace, Building.ResourceSilo],
+        [Building.MageGuild1, Building.MageGuild2, Building.MageGuild3],
+        [Building.Shipyard]
       ],
       [
-        ["dwelling5", "dwellingUp5"],
-        ["dwelling6", "dwellingUp6"],
-        ["dwelling7", "dwellingUp7"]
+        [Building.Special1],
+        [Building.Special2, Building.Special3],
+        [Building.Horde1, "horde1Upgr"]
+      ],
+      [
+        [Building.Dwelling1, Building.DwellingUp1],
+        [Building.Dwelling2, Building.DwellingUp2],
+        [Building.Dwelling3, Building.DwellingUp3],
+        [Building.Dwelling4, Building.DwellingUp4]
+      ],
+      [
+        [Building.Dwelling5, Building.DwellingUp5],
+        [Building.Dwelling6, Building.DwellingUp6],
+        [Building.Dwelling7, Building.DwellingUp7]
       ]
     ],
     creatures: [
-      ["gnoll", "gnollMarauder"],
-      ["lizardman", "lizardWarrior"],
-      ["serpentFly", "fireDragonFly"],
-      ["basilisk", "greaterBasilisk"],
-      ["gorgon", "mightyGorgon"],
-      ["wyvern", "wyvernMonarch"],
-      ["hydra", "chaosHydra"]
+      [Creature.Gnoll, Creature.GnollMarauder],
+      [Creature.Lizardman, Creature.LizardWarrior],
+      [Creature.SerpentFly, Creature.DragonFly],
+      [Creature.Basilisk, Creature.GreaterBasilisk],
+      [Creature.Gorgon, Creature.MightyGorgon],
+      [Creature.Wyvern, Creature.WyvernMonarch],
+      [Creature.Hydra, Creature.ChaosHydra]
     ],
-    warMachine: "firstAidTent",
+    warMachine: Artifact.FirstAidTent,
     buildings: {
-      mageGuild1: { id: 0 },
-      mageGuild2: { id: 1, upgrades: "mageGuild1" },
-      mageGuild3: { id: 2, upgrades: "mageGuild2" },
-      tavern: { id: 5 },
-      shipyard: { id: 6 },
-      fort: { id: 7 },
-      citadel: { id: 8, upgrades: "fort" },
-      castle: { id: 9, upgrades: "citadel" },
-      villageHall: { id: 10, mode: "auto", produce: { gold: 500 } },
-      townHall: {
-        id: 11,
-        upgrades: "villageHall",
-        requires: ["tavern"],
+      [Building.MageGuild1]: {},
+      [Building.MageGuild2]: { upgrades: Building.MageGuild1 },
+      [Building.MageGuild3]: { upgrades: Building.MageGuild2 },
+      [Building.Tavern]: {},
+      [Building.Shipyard]: {},
+      [Building.Fort]: {},
+      [Building.Citadel]: { upgrades: Building.Fort },
+      [Building.Castle]: { upgrades: Building.Citadel },
+      [Building.VillageHall]: { mode: "auto", produce: { gold: 500 } },
+      [Building.TownHall]: {
+        upgrades: Building.VillageHall,
+        requires: [Building.Tavern],
         produce: { gold: 1000 }
       },
-      cityHall: {
-        id: 12,
-        upgrades: "townHall",
-        requires: ["allOf", ["mageGuild1"], ["marketplace"], ["blacksmith"]],
+      [Building.CityHall]: {
+        upgrades: Building.TownHall,
+        requires: [
+          Building.MageGuild1,
+          Building.Marketplace,
+          Building.Blacksmith
+        ],
         produce: { gold: 2000 }
       },
-      capitol: {
-        id: 13,
-        upgrades: "cityHall",
-        requires: ["castle"],
+      [Building.Capitol]: {
+        upgrades: Building.CityHall,
+        requires: [Building.Castle],
         produce: { gold: 4000 }
       },
-      marketplace: { id: 14 },
-      resourceSilo: {
-        id: 15,
-        requires: ["marketplace"],
+      [Building.Marketplace]: {},
+      [Building.ResourceSilo]: {
+        requires: [Building.Marketplace],
         produce: { wood: 1, ore: 1 }
       },
-      blacksmith: { id: 16 },
+      [Building.Blacksmith]: {},
 
-      special1: {
-        id: 17,
-        requires: ["allOf", ["townHall"], ["special2"]]
+      [Building.Special1]: {
+        requires: [Building.TownHall, Building.Special2]
       },
-      horde1: { id: 18, upgrades: "dwelling1" },
+      [Building.Horde1]: { upgrades: Building.Dwelling1 },
       horde1Upgr: {
-        id: 19,
-        upgrades: "dwellingUp1",
-        requires: ["horde1"],
+        upgrades: Building.DwellingUp1,
+        requires: [Building.Horde1],
         mode: "auto"
       },
-      ship: { id: 20, upgrades: "shipyard" },
-      special2: { id: 21, requires: ["fort"] },
-      special3: { id: 22, requires: ["special2"] },
-      grail: { id: 26, mode: "grail", produce: { gold: 5000 } },
-      extraCapitol: { id: 29, requires: ["capitol"], mode: "auto" },
+      ship: { upgrades: Building.Shipyard },
+      [Building.Special2]: { requires: [Building.Fort] },
+      [Building.Special3]: { requires: [Building.Special2] },
+      [Building.Grail]: { mode: "grail", produce: { gold: 5000 } },
+      extraCapitol: { requires: [Building.Capitol], mode: "auto" },
 
-      dwelling1: { id: 30, requires: ["fort"] },
-      dwelling2: { id: 31, requires: ["dwelling1"] },
-      dwelling3: { id: 32, requires: ["dwelling1"] },
-      dwelling4: { id: 33, requires: ["dwelling3"] },
-      dwelling5: {
-        id: 34,
-        requires: ["allOf", ["dwelling2"], ["dwelling3"]]
+      [Building.Dwelling1]: { requires: [Building.Fort] },
+      [Building.Dwelling2]: { requires: [Building.Dwelling1] },
+      [Building.Dwelling3]: { requires: [Building.Dwelling1] },
+      [Building.Dwelling4]: { requires: [Building.Dwelling3] },
+      [Building.Dwelling5]: {
+        requires: [Building.Dwelling2, Building.Dwelling3]
       },
-      dwelling6: { id: 35, requires: ["dwelling2"] },
-      dwelling7: {
-        id: 36,
-        requires: ["allOf", ["dwelling4"], ["dwelling6"]]
+      [Building.Dwelling6]: { requires: [Building.Dwelling2] },
+      [Building.Dwelling7]: {
+        requires: [Building.Dwelling4, Building.Dwelling6]
       },
 
-      dwellingUp1: {
-        id: 37,
-        upgrades: "dwelling1",
-        requires: ["tavern"]
+      [Building.DwellingUp1]: {
+        upgrades: Building.Dwelling1,
+        requires: [Building.Tavern]
       },
-      dwellingUp2: { id: 38, upgrades: "dwelling2" },
-      dwellingUp3: { id: 39, upgrades: "dwelling3" },
-      dwellingUp4: { id: 40, upgrades: "dwelling4" },
-      dwellingUp5: {
-        id: 41,
-        upgrades: "dwelling5",
-        requires: ["resourceSilo"]
+      [Building.DwellingUp2]: { upgrades: Building.Dwelling2 },
+      [Building.DwellingUp3]: { upgrades: Building.Dwelling3 },
+      [Building.DwellingUp4]: { upgrades: Building.Dwelling4 },
+      [Building.DwellingUp5]: {
+        upgrades: Building.Dwelling5,
+        requires: [Building.ResourceSilo]
       },
-      dwellingUp6: { id: 42, upgrades: "dwelling6" },
-      dwellingUp7: { id: 43, upgrades: "dwelling7" }
+      [Building.DwellingUp6]: { upgrades: Building.Dwelling6 },
+      [Building.DwellingUp7]: { upgrades: Building.Dwelling7 }
     }
   }
 };

@@ -15,7 +15,7 @@ import strongholdConfig from "./towns/stronghold";
 import towerConfig from "./towns/tower";
 
 import { convertPixels, convertBGGtoRGBA } from "./utils";
-import { pcxFile, PcxFile, defFile, DefFile } from "homm3-parsers";
+import { pcxFile, PcxFile, defFile, DefFile, Alignment } from "homm3-parsers";
 import { parse, TagProducer } from "binary-markup";
 import { TownConfig } from "./towns";
 
@@ -146,15 +146,15 @@ function extractTown(name: string, config: TownConfig) {
   stream.pipe(out);
 }
 
-extractTown("castle", castleConfig);
-extractTown("conflux", confluxConfig);
-extractTown("dungeon", dungeonConfig);
-extractTown("fortress", fortressConfig);
-extractTown("inferno", infernoConfig);
-extractTown("necropolis", necropolisConfig);
-extractTown("rampart", rampartConfig);
-extractTown("stronghold", strongholdConfig);
-extractTown("tower", towerConfig);
+extractTown(Alignment.Castle, castleConfig);
+extractTown(Alignment.Conflux, confluxConfig);
+extractTown(Alignment.Dungeon, dungeonConfig);
+extractTown(Alignment.Fortress, fortressConfig);
+extractTown(Alignment.Inferno, infernoConfig);
+extractTown(Alignment.Necropolis, necropolisConfig);
+extractTown(Alignment.Rampart, rampartConfig);
+extractTown(Alignment.Stronghold, strongholdConfig);
+extractTown(Alignment.Tower, towerConfig);
 
 fs.writeFile(
   path.join(root, "towns", `buildings.css`),
