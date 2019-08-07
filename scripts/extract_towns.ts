@@ -4,117 +4,187 @@ import jetpack from "fs-jetpack";
 import { createImageData, createCanvas } from "canvas";
 import pack from "bin-pack";
 
-import castleConfig from "./towns/castle";
-import confluxConfig from "./towns/conflux";
-import dungeonConfig from "./towns/dungeon";
-import fortressConfig from "./towns/fortress";
-import infernoConfig from "./towns/inferno";
-import necropolisConfig from "./towns/necropolis";
-import rampartConfig from "./towns/rampart";
-import strongholdConfig from "./towns/stronghold";
-import towerConfig from "./towns/tower";
+import * as townTemplates from "../src/components/town/templates";
+import { TownTemplate } from "../src/contracts/town";
 
 import { convertPixels, convertBGGtoRGBA } from "./utils";
 import { pcxFile, PcxFile, defFile, DefFile, Alignment } from "homm3-parsers";
 import { parse, TagProducer } from "binary-markup";
-import { TownConfig } from "./towns";
+import { Frame } from "./contracts";
+
+interface FileData {
+  key: string;
+  left: number;
+  top: number;
+  fullWidth: number;
+  fullHeight: number;
+  width: number;
+  height: number;
+  imageData: ImageData;
+}
 
 const root = path.resolve(process.cwd(), "src/assets/homm3");
 
 const createPcxImage = (input: PcxFile) => {
   const { width, height } = input;
-  let imageData;
+  let imageData: ImageData | null = null;
   if (input.hasPalette) {
     const { pixels, palette } = input.paletteData;
-    imageData = convertPixels(pixels, palette);
+    imageData = createImageData(convertPixels(pixels, palette), width, height);
   } else if (input.hasBgr) {
-    imageData = convertBGGtoRGBA(input.bgr);
+    imageData = createImageData(convertBGGtoRGBA(input.bgr), width, height);
+  }
+
+  if (!imageData) {
+    return null;
   }
 
   return { imageData, width, height };
 };
 
-const cssRules = [
-  `.town--buildings {
-  position: relative;
-  width: 800px;
-  height: 374px;
-}`
-];
-
-function extractBackground(name: string, config: TownConfig) {
-  const bgFile = jetpack.read(
-    path.resolve(__dirname, "defs", config.town.townBackground.toLowerCase()),
+function extractPcxFile(fileName: string) {
+  const content = jetpack.read(
+    path.resolve(__dirname, "defs", fileName.toLowerCase()),
     "buffer"
   );
-  if (bgFile) {
-    const { width, height, imageData } = createPcxImage(
-      parse<PcxFile>((pcxFile as unknown) as TagProducer<PcxFile>, bgFile)
+  if (content) {
+    return createPcxImage(
+      parse<PcxFile>((pcxFile as unknown) as TagProducer<PcxFile>, content)
     );
-
-    if (imageData) {
-      cssRules.push(`.town--${name} .town--buildings {
-  background-image: url(./${name}-bg.png);
-}`);
-
-      const canvas = createCanvas(width, height);
-      const ctx = canvas.getContext("2d");
-      ctx.putImageData(createImageData(imageData, width, height), 0, 0);
-
-      const out = fs.createWriteStream(
-        path.join(root, "towns", `${name}-bg.png`)
-      );
-      const stream = canvas.createPNGStream();
-      stream.pipe(out);
-    }
+  } else {
+    console.error(`Failed to read ${fileName}`);
   }
+  return null;
 }
 
-function extractTown(name: string, config: TownConfig) {
+function extractDefFile(
+  key: string,
+  fileName: string,
+  hasAnimation: boolean = true
+) {
+  const files: FileData[] = [];
+  const animations: Record<string, string[]> = {};
+
+  const content = jetpack.read(
+    path.resolve(__dirname, "defs", fileName.toLowerCase()),
+    "buffer"
+  );
+
+  if (content) {
+    const parsed = parse<DefFile>(
+      (defFile as unknown) as TagProducer<DefFile>,
+      content
+    );
+    const { blocks, palette } = parsed;
+    const [block] = blocks;
+    for (const [index, fileData] of block.files.entries()) {
+      const imageData = createImageData(
+        convertPixels(fileData.pixels, palette),
+        fileData.width,
+        fileData.height
+      );
+
+      files.push({
+        key: key + (index || ""),
+        left: fileData.left,
+        top: fileData.top,
+        width: fileData.width,
+        height: fileData.height,
+        fullWidth: fileData.fullWidth,
+        fullHeight: fileData.fullHeight,
+        imageData
+      });
+      if (hasAnimation && index > 0) {
+        if (!animations[key]) {
+          animations[key] = [];
+        }
+        animations[key].push(key + (index || ""));
+      }
+    }
+  } else {
+    console.error(`Failed to read ${fileName}`);
+  }
+
+  return { files, animations };
+}
+
+function extractTown(name: string, config: TownTemplate) {
   console.info(`Extracting ${name} buildings`);
 
-  extractBackground(name, config);
+  const files: FileData[] = [];
+  const frames: Record<string, Frame> = {};
+  let animations: Record<string, string[]> = {};
 
-  const files = [];
-  for (const [key, structConfig] of Object.entries(config.town.structures)) {
-    if (structConfig && structConfig.animation) {
-      const fileName = structConfig.animation.toLowerCase();
-      const content = jetpack.read(
-        path.resolve(__dirname, "defs", fileName),
-        "buffer"
+  const townBg = extractPcxFile(config.townBackground);
+  if (townBg) {
+    files.push({
+      key: `${name}Background`,
+      left: 0,
+      top: 0,
+      width: townBg.width,
+      height: townBg.height,
+      fullWidth: townBg.width,
+      fullHeight: townBg.height,
+      imageData: townBg.imageData
+    });
+  }
+
+  for (const [key, structConfig] of Object.entries(config.buildings)) {
+    if (structConfig) {
+      const { files: buildingFiles, animations: buildingAnim } = extractDefFile(
+        `${name}${key}`,
+        structConfig.gfx.animation,
+        !structConfig.gfx.noAnimation
       );
-      if (content) {
-        const parsed = parse<DefFile>(
-          (defFile as unknown) as TagProducer<DefFile>,
-          content
-        );
-        const { blocks, palette } = parsed;
-        const [block] = blocks;
-        const [fileData] = block.files;
+      files.push(...buildingFiles);
+      animations = { ...animations, ...buildingAnim };
 
-        const imageData = createImageData(
-          convertPixels(fileData.pixels, palette),
-          fileData.width,
-          fileData.height
-        );
-        const canvas = createCanvas(fileData.fullWidth, fileData.fullHeight);
-        const ctx = canvas.getContext("2d");
-        ctx.putImageData(imageData, fileData.left, fileData.top);
-
+      const border = extractPcxFile(structConfig.gfx.border);
+      if (border) {
         files.push({
-          key,
-          structConfig,
-          width: fileData.fullWidth,
-          height: fileData.fullHeight,
-          imageData: ctx.getImageData(
-            0,
-            0,
-            fileData.fullWidth,
-            fileData.fullHeight
-          )
+          key: `${name}${key}Border`,
+          left: 0,
+          top: 0,
+          width: border.width,
+          height: border.height,
+          fullWidth: border.width,
+          fullHeight: border.height,
+          imageData: border.imageData
         });
       }
     }
+  }
+  for (const [key, structConfig] of Object.entries(config.extras)) {
+    if (structConfig) {
+      const fileName = structConfig.gfx.toLowerCase();
+      const { files: buildingFiles, animations: buildingAnim } = extractDefFile(
+        `extra${name}${key}`,
+        fileName
+      );
+      files.push(...buildingFiles);
+      animations = { ...animations, ...buildingAnim };
+    }
+  }
+  for (const [key, structConfig] of Object.entries(config.upgrades)) {
+    if (structConfig) {
+      const fileName = structConfig.gfx.animation.toLowerCase();
+      const { files: buildingFiles, animations: buildingAnim } = extractDefFile(
+        `upgrade${name}${key}`,
+        fileName,
+        !structConfig.gfx.noAnimation
+      );
+      files.push(...buildingFiles);
+      animations = { ...animations, ...buildingAnim };
+    }
+  }
+  for (const [index, animation] of config.animations.entries()) {
+    const fileName = animation.gfx.toLowerCase();
+    const { files: buildingFiles, animations: buildingAnim } = extractDefFile(
+      `${name}extraAnimation${index}`,
+      fileName
+    );
+    files.push(...buildingFiles);
+    animations = { ...animations, ...buildingAnim };
   }
 
   const { width, height, items } = pack(files);
@@ -122,43 +192,50 @@ function extractTown(name: string, config: TownConfig) {
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
 
-  cssRules.push(`.town--${name} .building {
-  position: absolute;
-  background-image: url(./${name}-buildings.png);
-}`);
-
   for (const { x, y, item } of items) {
     ctx.putImageData(item.imageData, x, y);
-    cssRules.push(`.town--${name} .building--${item.key} {
-  width: ${item.width}px;
-  height: ${item.height}px;
-  left: ${item.structConfig.x}px;
-  top: ${item.structConfig.y}px;
-  z-index: ${item.structConfig.z !== undefined ? item.structConfig.z + 3 : 3};
-  background-position: -${x}px -${y}px
-}`);
+    frames[item.key] = {
+      frame: { x, y, w: item.width, h: item.height },
+      rotated: false,
+      trimmed: item.width !== item.fullWidth || item.height !== item.fullHeight,
+      spriteSourceSize: {
+        x: item.left,
+        y: item.top,
+        w: item.fullWidth,
+        h: item.fullHeight
+      },
+      sourceSize: { w: item.fullWidth, h: item.fullHeight }
+    };
   }
 
-  const out = fs.createWriteStream(
-    path.join(root, "towns", `${name}-buildings.png`)
-  );
+  const out = fs.createWriteStream(path.join(root, "towns", `${name}.png`));
   const stream = canvas.createPNGStream();
   stream.pipe(out);
+
+  const atlas = {
+    meta: {
+      image: `${name}.png`,
+      format: "RGBA8888",
+      size: { w: width, h: height },
+      scale: 1
+    },
+    frames,
+    animations
+  };
+  fs.writeFile(
+    path.join(root, "towns", `${name}.json`),
+    JSON.stringify(atlas),
+    "utf8",
+    err => err && console.error(err)
+  );
 }
 
-extractTown(Alignment.Castle, castleConfig);
-extractTown(Alignment.Conflux, confluxConfig);
-extractTown(Alignment.Dungeon, dungeonConfig);
-extractTown(Alignment.Fortress, fortressConfig);
-extractTown(Alignment.Inferno, infernoConfig);
-extractTown(Alignment.Necropolis, necropolisConfig);
-extractTown(Alignment.Rampart, rampartConfig);
-extractTown(Alignment.Stronghold, strongholdConfig);
-extractTown(Alignment.Tower, towerConfig);
-
-fs.writeFile(
-  path.join(root, "towns", `buildings.css`),
-  cssRules.join("\n\n"),
-  "utf8",
-  err => err && console.error(err)
-);
+extractTown(Alignment.Castle, townTemplates.castleTemplate);
+extractTown(Alignment.Conflux, townTemplates.confluxTemplate);
+extractTown(Alignment.Dungeon, townTemplates.dungeonTemplate);
+extractTown(Alignment.Fortress, townTemplates.fortressTemplate);
+extractTown(Alignment.Inferno, townTemplates.infernoTemplate);
+extractTown(Alignment.Necropolis, townTemplates.necropolisTemplate);
+extractTown(Alignment.Rampart, townTemplates.rampartTemplate);
+extractTown(Alignment.Stronghold, townTemplates.strongholdTemplate);
+extractTown(Alignment.Tower, townTemplates.towerTemplate);

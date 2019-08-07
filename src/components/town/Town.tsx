@@ -8,6 +8,7 @@ import { Garrison } from "./Garrison";
 import { getAlignmentByHeader } from "../map/utils";
 import { useAppStore } from "../../store/AppStore";
 import { MetaType } from "homm3-parsers";
+import "./Town.css";
 
 export const Town = observer(() => {
   const appStore = useAppStore();
@@ -19,7 +20,9 @@ export const Town = observer(() => {
 
   return (
     <div className={`town--${alignment}`}>
-      <Buildings town={town} />
+      <div className="town--buildings">
+        <Buildings alignment={alignment} town={town} />
+      </div>
       <Garrison garrison={town.hasGarrison ? town.garrison : []} />
     </div>
   );

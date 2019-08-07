@@ -8,6 +8,7 @@ import * as fileLists from "./textures";
 import { convertPixels } from "./utils";
 import { parse, TagProducer } from "binary-markup";
 import { defFile, DefFile } from "homm3-parsers";
+import { Frame } from "./contracts";
 
 interface FileData {
   name: string;
@@ -19,19 +20,6 @@ interface FileData {
   left: number;
   top: number;
   imageData: Uint8ClampedArray;
-}
-
-interface Frame {
-  frame: { x: number; y: number; w: number; h: number };
-  rotated: boolean;
-  trimmed: boolean;
-  spriteSourceSize: {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-  };
-  sourceSize: { w: number; h: number };
 }
 
 const root = path.resolve(process.cwd(), "src/assets/homm3");
