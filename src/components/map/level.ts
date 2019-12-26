@@ -38,7 +38,7 @@ export function createLevel({
     navMesh,
     mapSize
   });
-  level.addChild(navMeshLayer);
+  // level.addChild(navMeshLayer);
 
   return { level, navMeshLayer };
 }
