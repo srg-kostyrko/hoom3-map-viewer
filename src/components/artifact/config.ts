@@ -9,6 +9,7 @@ import {
 import { ArtifactConfig } from "../../contracts/artifact";
 import { TraitType } from "../../contracts/traits";
 
+/*
 export const artifactConfig: Record<Artifact, ArtifactConfig> = {
   [Artifact.Spellbook]: {
     bonuses: []
@@ -1204,9 +1205,9 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
   [Artifact.SpellbindersHat]: {
     bonuses: [
       {
-        subtype: 5,
+        level: 5,
         type: TraitType.SPELLS_OF_LEVEL,
-        val: 3
+        skillLevel: 3
       }
     ]
   },
@@ -1227,16 +1228,16 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
   [Artifact.VialOfDragonBlood]: {
     bonuses: [
       {
-        limiters: ["DRAGON_NATURE"],
-        subtype: PrimarySkill.Attack,
+        limiters: [TraitType.DRAGON_NATURE],
+        skill: PrimarySkill.Attack,
         type: TraitType.PRIMARY_SKILL,
-        val: 5
+        value: 5
       },
       {
-        limiters: ["DRAGON_NATURE"],
+        limiters: [TraitType.DRAGON_NATURE],
         skill: PrimarySkill.Defence,
         type: TraitType.PRIMARY_SKILL,
-        val: 5
+        value: 5
       }
     ]
   },
@@ -1320,27 +1321,28 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
     ]
   },
   [Artifact.ElixirOfLife]: {
+    // TODO
     bonuses: [
-      {
-        type: TraitType.STACK_HEALTH,
-        percent: 25,
-        valuetype: TraitType.PERCENT_TO_BASE
-      },
-      {
-        type: TraitType.STACK_HEALTH,
-        val: -25,
-        valuetype: TraitType.PERCENT_TO_BASE,
-        limiters: ["UNDEAD"]
-      },
-      {
-        type: TraitType.HP_REGENERATION,
-        val: 50
-      },
-      {
-        type: TraitType.HP_REGENERATION,
-        val: -50,
-        limiters: ["UNDEAD"]
-      }
+      // {
+      //   type: TraitType.STACK_HEALTH,
+      //   percent: 25,
+      //   valuetype: TraitType.PERCENT_TO_BASE
+      // },
+      // {
+      //   type: TraitType.STACK_HEALTH,
+      //   val: -25,
+      //   valuetype: TraitType.PERCENT_TO_BASE,
+      //   limiters: ["UNDEAD"]
+      // },
+      // {
+      //   type: TraitType.HP_REGENERATION,
+      //   val: 50
+      // },
+      // {
+      //   type: TraitType.HP_REGENERATION,
+      //   val: -50,
+      //   limiters: ["UNDEAD"]
+      // }
     ],
 
     components: [
@@ -1391,7 +1393,7 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
     bonuses: [
       {
         type: TraitType.CREATURE_GROWTH_PERCENT,
-        val: 50
+        percent: 50
       }
     ]
   },
@@ -1399,7 +1401,7 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
     bonuses: [
       {
         type: TraitType.LEVEL_SPELL_IMMUNITY,
-        val: 4
+        level: 4
       },
       {
         skill: PrimarySkill.Attack,
@@ -1540,7 +1542,7 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
     bonuses: [
       {
         type: TraitType.CASTS,
-        val: 10
+        amount: 10
       },
       {
         spell: Spell.Implosion,
@@ -1551,33 +1553,33 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
         type: TraitType.SPELLCASTER
       },
       {
-        type: TraitType.RANDOM_SPELLCASTER,
-        val: 0
+        type: TraitType.RANDOM_SPELLCASTER
       },
       {
-        subtype: Creature.VampireLord,
+        creature: Creature.VampireLord,
         type: TraitType.DAEMON_SUMMONING,
-        val: 10
+        unitHP: 10
       },
       {
-        addInfo: 2,
-        subtype: Spell.LightningBolt,
-        type: TraitType.ENCHANTER,
-        val: 0
+        cooldown: 2,
+        spell: Spell.LightningBolt,
+        type: TraitType.ENCHANTER
       },
-      {
-        subtype: 1,
-        type: TraitType.REBIRTH,
-        val: 1
-      },
+      // TODO
+      // {
+      //   subtype: 1,
+      //   type: TraitType.REBIRTH,
+      //   val: 1
+      // },
       {
         type: TraitType.MANA_DRAIN,
-        val: 10
-      },
-      {
-        type: TraitType.HEALER,
-        val: 25
+        value: 10
       }
+      // TODO
+      // {
+      //   type: TraitType.HEALER,
+      //   val: 25
+      // }
     ]
   },
   [Artifact.GoldTowerArrow]: {
@@ -1585,29 +1587,30 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
       {
         type: TraitType.NO_DISTANCE_PENALTY
       },
-      {
-        type: TraitType.ADDITIONAL_ATTACK,
-        val: 2
-      },
-      {
-        subtype: 22,
-        type: TraitType.SPELL_LIKE_ATTACK,
-        val: 1
-      },
-      {
-        type: TraitType.CATAPULT,
-        val: 0
-      },
-      {
-        type: TraitType.ACID_BREATH,
-        val: 20
-      },
-      {
-        subtype: 0,
-        type: TraitType.SHOTS,
-        val: 200,
-        valuetype: TraitType.PERCENT_TO_BASE
-      },
+      // TODO
+      // {
+      //   type: TraitType.ADDITIONAL_ATTACK,
+      //   val: 2
+      // },
+      // {
+      //   subtype: 22,
+      //   type: TraitType.SPELL_LIKE_ATTACK,
+      //   val: 1
+      // },
+      // {
+      //   type: TraitType.CATAPULT,
+      //   val: 0
+      // },
+      // {
+      //   type: TraitType.ACID_BREATH,
+      //   val: 20
+      // },
+      // {
+      //   subtype: 0,
+      //   type: TraitType.SHOTS,
+      //   val: 200,
+      //   valuetype: TraitType.PERCENT_TO_BASE
+      // },
       {
         level: 1,
         spell: Spell.Aging,
@@ -1636,21 +1639,22 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
   },
   [Artifact.MonstersPower]: {
     bonuses: [
-      {
-        type: TraitType.STACK_HEALTH,
-        val: 100,
-        valuetype: TraitType.PERCENT_TO_BASE
-      },
-      {
-        subtype: 2,
-        type: TraitType.CREATURE_DAMAGE,
-        val: 100,
-        valuetype: TraitType.PERCENT_TO_ALL
-      },
-      {
-        type: TraitType.HP_REGENERATION,
-        val: 50
-      },
+      // TODO
+      // {
+      //   type: TraitType.STACK_HEALTH,
+      //   val: 100,
+      //   valuetype: TraitType.PERCENT_TO_BASE
+      // },
+      // {
+      //   subtype: 2,
+      //   type: TraitType.CREATURE_DAMAGE,
+      //   val: 100,
+      //   valuetype: TraitType.PERCENT_TO_ALL
+      // },
+      // {
+      //   type: TraitType.HP_REGENERATION,
+      //   val: 50
+      // },
       {
         type: TraitType.NO_RETALIATION
       },
@@ -1662,7 +1666,7 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
       },
       {
         type: TraitType.SPELL_RESISTANCE_AURA,
-        val: 100
+        bonus: 100
       },
       {
         type: TraitType.DIRECT_DAMAGE_IMMUNITY
@@ -1670,3 +1674,4 @@ export const artifactConfig: Record<Artifact, ArtifactConfig> = {
     ]
   }
 };
+*/

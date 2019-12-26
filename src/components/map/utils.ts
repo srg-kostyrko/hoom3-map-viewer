@@ -81,6 +81,11 @@ const townSprites: Record<Alignment, Record<TownSprite, string>> = {
     fort: "avcranx0.def",
     village: "avcrand0.def",
     capitol: "avcranz0.def"
+  },
+  [Alignment.Neutral]: {
+    fort: "avcranx0.def",
+    village: "avcrand0.def",
+    capitol: "avcranz0.def"
   }
 };
 

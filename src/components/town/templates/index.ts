@@ -49,5 +49,6 @@ export const townTemplates: Record<Alignment, TownTemplate | null> = {
   [Alignment.Rampart]: rampartTemplate,
   [Alignment.Stronghold]: strongholdTemplate,
   [Alignment.Tower]: towerTemplate,
-  [Alignment.Random]: null
+  [Alignment.Random]: null,
+  [Alignment.Neutral]: null
 };

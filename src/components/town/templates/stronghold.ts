@@ -371,11 +371,11 @@ export const strongholdTemplate: TownTemplate = {
   ],
   creatures: [
     [Creature.Goblin, Creature.Hobgoblin],
-    [Creature.WolfRrider, Creature.WolfRaider],
+    [Creature.WolfRider, Creature.WolfRaider],
     [Creature.Orc, Creature.OrcChieftain],
     [Creature.Ogre, Creature.OgreMage],
     [Creature.Roc, Creature.Thunderbird],
-    [Creature.Cyclops, Creature.CyclopsKing],
+    [Creature.Cyclop, Creature.CyclopKing],
     [Creature.Behemoth, Creature.AncientBehemoth]
   ],
   warMachine: Artifact.AmmoCart,

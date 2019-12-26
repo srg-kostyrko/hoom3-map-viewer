@@ -12,6 +12,7 @@ type ArtifactBonus =
   | {
       skill: PrimarySkill;
       type: TraitType.PRIMARY_SKILL;
+      limiters?: TraitType[];
       value: number;
     }
   | {
@@ -192,6 +193,44 @@ type ArtifactBonus =
   | {
       spell: Spell;
       type: TraitType.SPELLCASTER;
+    }
+  | {
+      level: number;
+      type: TraitType.SPELLS_OF_LEVEL;
+      skillLevel: number;
+    }
+  | {
+      type: TraitType.CREATURE_GROWTH_PERCENT;
+      percent: number;
+    }
+  | {
+      type: TraitType.LEVEL_SPELL_IMMUNITY;
+      level: number;
+    }
+  | {
+      type: TraitType.CASTS;
+      amount: number;
+    }
+  | {
+      type: TraitType.RANDOM_SPELLCASTER;
+    }
+  | {
+      creature: Creature;
+      type: TraitType.DAEMON_SUMMONING;
+      unitHP: number;
+    }
+  | {
+      type: TraitType.MANA_DRAIN;
+      value: number;
+    }
+  | {
+      type: TraitType.SPELL_RESISTANCE_AURA;
+      bonus: number;
+    }
+  | {
+      cooldown: 2;
+      spell: Spell;
+      type: TraitType.ENCHANTER;
     };
 
 export interface ArtifactConfig {

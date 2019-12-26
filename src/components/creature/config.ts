@@ -7,7 +7,10 @@ import {
   AttackType
 } from "../../contracts/traits";
 
-export const CREATURES_CONFIG: Record<Creature, CreatureConfig> = {
+export const CREATURES_CONFIG: Record<
+  Exclude<Creature, Creature.EMPTY>,
+  CreatureConfig
+> = {
   [Creature.Pikeman]: {
     level: 1,
     faction: Alignment.Castle,
@@ -1737,7 +1740,7 @@ export const CREATURES_CONFIG: Record<Creature, CreatureConfig> = {
     graphics: "CHGOBL.DEF",
     abilities: []
   },
-  [Creature.WolfRrider]: {
+  [Creature.WolfRider]: {
     level: 2,
     faction: Alignment.Stronghold,
     upgradesTo: Creature.WolfRaider,
@@ -1820,15 +1823,15 @@ export const CREATURES_CONFIG: Record<Creature, CreatureConfig> = {
     ],
     graphics: "CTBIRD.DEF"
   },
-  [Creature.Cyclops]: {
+  [Creature.Cyclop]: {
     level: 6,
     faction: Alignment.Stronghold,
-    upgradesTo: Creature.CyclopsKing,
+    upgradesTo: Creature.CyclopKing,
     graphics: "CCYCLR.DEF",
     missileGraphics: "PCYCLBX.DEF",
     abilities: []
   },
-  [Creature.CyclopsKing]: {
+  [Creature.CyclopKing]: {
     level: 6,
     faction: Alignment.Stronghold,
     abilities: [

@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect } from "react";
+import React, { useEffect } from "react";
 import useResizeObserver from "use-resize-observer";
 import { usePixiAppCreator } from "./hooks/usePixiAppCreator";
 import { pixiAppContext } from "./hooks/usePixiApp";
@@ -11,11 +11,7 @@ export function Stage({
   onCreated: (pixiApp: Application) => void;
   children: JSX.Element;
 }) {
-  const [containerRef, width, height] = useResizeObserver() as [
-    MutableRefObject<any>,
-    number,
-    number
-  ];
+  const { ref: containerRef, width, height } = useResizeObserver();
   const [ref, app] = usePixiAppCreator();
 
   useEffect(() => {
