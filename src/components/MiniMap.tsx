@@ -9,12 +9,6 @@ import { MapData } from "../contracts/app";
 
 import "./MiniMap.css";
 
-// TODO
-// - 108 map size artifacts
-// - obstacles
-// - towns
-// - ownable objects
-
 const MIN_TILE_SIZE = 2;
 const CANVAS_SIZE = MIN_TILE_SIZE * XL_MAP;
 
