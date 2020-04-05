@@ -7,6 +7,7 @@ import { LoadMapButton } from "./components/ui/loadMapButton";
 import { MiniMap } from "./components/MiniMap";
 import { Observer } from "mobx-react-lite";
 import { Town } from "./components/town/Town";
+import { CreaturePreview } from "./components/creature/CreaturePreview";
 
 export const App = () => {
   return (
@@ -33,6 +34,7 @@ export const App = () => {
           }
         </AppStoreConsumer>
         <Town />
+        <CreaturePreview />
       </div>
     </AppStoreProvider>
   );

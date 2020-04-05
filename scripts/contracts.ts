@@ -10,3 +10,14 @@ export interface Frame {
   };
   sourceSize: { w: number; h: number };
 }
+
+export interface FileData {
+  key: string;
+  left: number;
+  top: number;
+  fullWidth: number;
+  fullHeight: number;
+  width: number;
+  height: number;
+  imageData: ImageData;
+}

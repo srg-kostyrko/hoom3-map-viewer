@@ -3,17 +3,8 @@ import fs from "fs";
 import zlib from "zlib";
 import glob from "glob";
 
-import { textures } from "./textures";
-import { uiFiles } from "./ui";
-import { animationFiles } from "./animations";
-import { townFiles } from "./towns";
 import { LodFile, lodFile } from "homm3-parsers";
 import { parse, TagProducer } from "binary-markup";
-
-const allFiles = textures
-  .concat(uiFiles)
-  .concat(animationFiles)
-  .concat(townFiles);
 
 const dirPath = path.resolve(__dirname, "in");
 
@@ -56,10 +47,8 @@ function parseFile(filePath: string): Promise<void> {
         );
 
         for (const file of fileData.entries) {
-          if (allFiles.includes(file.name.toLowerCase())) {
-            console.log(`Saving file ${file.name.toLowerCase()}`);
-            await saveFile(file);
-          }
+          console.log(`Saving file ${file.name.toLowerCase()}`);
+          await saveFile(file);
         }
         resolve();
       }

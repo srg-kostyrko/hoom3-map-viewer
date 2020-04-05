@@ -1,4 +1,5 @@
 import { Sprite, Filter, Loader } from "pixi.js";
+import { OutlineFilter } from "pixi-filters";
 
 type Props = {
   image: string;
@@ -36,6 +37,7 @@ export function createSprite(props: Props): Sprite {
     const placeStep = props.placeStep || 0;
     sprite.x = (props.x || 0) + placeStep - sprite.width;
     sprite.y = (props.y || 0) + placeStep - sprite.height;
+    sprite.shader = new OutlineFilter(9, 0xff0000);
   } else {
     sprite.x = props.x || 0;
     sprite.y = props.y || 0;

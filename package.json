@@ -34,11 +34,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "extract": "yarn run extract:lod && yarn run extract:textures && yarn run extract:animations && yarn run extract:ui && extract:towns",
+    "extract": "yarn run extract:lod && yarn run extract:textures && yarn run extract:creatures && yarn run extract:ui && yarn run extract:towns",
     "extract:lod": "ts-node -P tsconfig-node.json scripts/extract_lod.ts",
     "extract:textures": "ts-node -P tsconfig-node.json scripts/extract_textures.ts",
     "extract:ui": "ts-node -P tsconfig-node.json scripts/extract_ui.ts",
-    "extract:animations": "ts-node -P tsconfig-node.json scripts/extract_animations.ts",
+    "extract:creatures": "ts-node -P tsconfig-node.json scripts/extract_creatures.ts",
     "extract:towns": "ts-node -P tsconfig-node.json scripts/extract_towns.ts",
     "convert:maps": "ts-node -P tsconfig-node.json scripts/convert_maps.ts"
   },

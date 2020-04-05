@@ -7,7 +7,7 @@ import {
   AttackType
 } from "../../contracts/traits";
 
-export const CREATURES_CONFIG: Record<
+export const creatureConfig: Record<
   Exclude<Creature, Creature.EMPTY>,
   CreatureConfig
 > = {

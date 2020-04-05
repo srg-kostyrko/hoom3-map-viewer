@@ -8,20 +8,9 @@ import * as townTemplates from "../src/components/town/templates";
 import { TownTemplate } from "../src/contracts/town";
 
 import { convertPixels, convertBGGtoRGBA } from "./utils";
-import { pcxFile, PcxFile, defFile, DefFile, Alignment } from "homm3-parsers";
-import { parse, TagProducer } from "binary-markup";
-import { Frame } from "./contracts";
-
-interface FileData {
-  key: string;
-  left: number;
-  top: number;
-  fullWidth: number;
-  fullHeight: number;
-  width: number;
-  height: number;
-  imageData: ImageData;
-}
+import { pcxFile, PcxFile, Alignment, DefFile, defFile } from "homm3-parsers";
+import { parse } from "binary-markup";
+import { Frame, FileData } from "./contracts";
 
 const root = path.resolve(process.cwd(), "src/assets/homm3");
 
@@ -48,16 +37,14 @@ function extractPcxFile(fileName: string) {
     "buffer"
   );
   if (content) {
-    return createPcxImage(
-      parse<PcxFile>((pcxFile as unknown) as TagProducer<PcxFile>, content)
-    );
+    return createPcxImage(parse<PcxFile>(pcxFile, content));
   } else {
     console.error(`Failed to read ${fileName}`);
   }
   return null;
 }
 
-function extractDefFile(
+export function extractDefFile(
   key: string,
   fileName: string,
   hasAnimation: boolean = true
@@ -71,10 +58,7 @@ function extractDefFile(
   );
 
   if (content) {
-    const parsed = parse<DefFile>(
-      (defFile as unknown) as TagProducer<DefFile>,
-      content
-    );
+    const parsed = parse<DefFile>(defFile, content);
     const { blocks, palette } = parsed;
     const [block] = blocks;
     for (const [index, fileData] of block.files.entries()) {
@@ -126,6 +110,19 @@ function extractTown(name: string, config: TownTemplate) {
       fullWidth: townBg.width,
       fullHeight: townBg.height,
       imageData: townBg.imageData
+    });
+  }
+  const creatureBackground = extractPcxFile(config.creatureBackground);
+  if (creatureBackground) {
+    files.push({
+      key: `${name}CreatureBackground`,
+      left: 0,
+      top: 0,
+      width: creatureBackground.width,
+      height: creatureBackground.height,
+      fullWidth: creatureBackground.width,
+      fullHeight: creatureBackground.height,
+      imageData: creatureBackground.imageData
     });
   }
 

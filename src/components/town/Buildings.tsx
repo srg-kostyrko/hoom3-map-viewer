@@ -110,7 +110,6 @@ function createBuildings(
       }
     }
   }
-  console.log(buildingsContainer);
   app.stage.addChild(buildingsContainer);
 }
 

@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -17,7 +21,12 @@
     "noEmit": true,
     "jsx": "preserve",
     "experimentalDecorators": true,
-    "typeRoots": ["./@types", "./node_modules/@types"]
+    "typeRoots": [
+      "./@types",
+      "./node_modules/@types"
+    ]
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }
